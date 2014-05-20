@@ -112,6 +112,7 @@ int main(int argc,char* args[])
 	char* title=NULL;
 	char word_wrap=0;
 	char no_header=0;
+	char latex=0;
 	//Searching Parameters
 	for (int p = 1;p<argc;p++)
 	{
@@ -136,6 +137,7 @@ int main(int argc,char* args[])
 			printf("                           CSS3 supporting browsers as well as many older ones.\n");
 			printf("         --no-header,  -n: Don't include header into generated HTML,\n");
 			printf("                           useful for inclusion in full HTML files.\n");
+			printf("         --latex,      -L: Export in LaTeX instead of HTML,\n");
 			printf("Example: \033[1maha\033[0m --help | \033[1maha\033[0m --black > aha-help.htm\n");
 			printf("         Writes this help text to the file aha-help.htm\n\n");
 			printf("Copyleft \033[1;32mAlexander Matthes\033[0m aka \033[4mZiz\033[0m 2012\n");
@@ -170,6 +172,11 @@ int main(int argc,char* args[])
 		if ((strcmp(args[p],"--no-header")==0) || (strcmp(args[p],"-n")==0))
 		{
 			no_header=1;
+		}
+		else
+		if ((strcmp(args[p],"--latex")==0) || (strcmp(args[p],"-L")==0))
+		{
+			latex=1;
 		}
 		else
 		if ((strcmp(args[p],"--word-wrap")==0) || (strcmp(args[p],"-w")==0))
@@ -225,102 +232,105 @@ int main(int argc,char* args[])
 	
 	if (no_header == 0)
 	{
-		//Header:
-		if (iso<0)
-			printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
-		else
-			printf("<?xml version=\"1.0\" encoding=\"ISO-8859-%i\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",iso);
-		printf("<!-- This file was created with the aha Ansi HTML Adapter. http://ziz.delphigl.com/tool_aha.php -->\n");
-		printf("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
-		printf("<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xml+xhtml; charset=UTF-8\" />\n");
-		if (title)
-			printf("<title>%s</title>\n",title);
-		else
+		if (latex == 0)
 		{
-			if (filename==NULL)
-				printf("<title>stdin</title>\n");
+			//Header:
+			if (iso<0)
+				printf("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 			else
-				printf("<title>%s</title>\n",filename);
-		}
-		if (stylesheet)
-		{
-			printf("<style type=\"text/css\">\n");
-			switch (colorshema)
-			{
-				case 1:  printf("body       {color: white; background-color: black;}\n");
-								 printf(".reset     {color: white;}\n");
-								 printf(".bg-reset  {background-color: black;}\n");
-								 break;
-				case 2:  printf("body       {background-color: pink;}\n");
-								 printf(".reset     {color: black;}\n");
-								 printf(".bg-reset  {background-color: pink;}\n");
-								 break;
-				default: printf(".reset     {color: black;}\n");
-				         printf(".bg-reset  {background-color: white;}\n");
-			}
-			if (colorshema!=1)
-			{
-				printf(".black     {color: black;}\n");
-				printf(".red       {color: red;}\n");
-				printf(".green     {color: green;}\n");
-				printf(".yellow    {color: olive;}\n");
-				printf(".blue      {color: blue;}\n");
-				printf(".purple    {color: purple;}\n");
-				printf(".cyan      {color: teal;}\n");
-				printf(".white     {color: gray;}\n");
-				printf(".bg-black  {background-color: black;}\n");
-				printf(".bg-red    {background-color: red;}\n");
-				printf(".bg-green  {background-color: green;}\n");
-				printf(".bg-yellow {background-color: olive;}\n");
-				printf(".bg-blue   {background-color: blue;}\n");
-				printf(".bg-purple {background-color: purple;}\n");
-				printf(".bg-cyan   {background-color: teal;}\n");
-				printf(".bg-white  {background-color: gray;}\n");
-			}
+				printf("<?xml version=\"1.0\" encoding=\"ISO-8859-%i\" ?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",iso);
+			printf("<!-- This file was created with the aha Ansi HTML Adapter. http://ziz.delphigl.com/tool_aha.php -->\n");
+			printf("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
+			printf("<head>\n<meta http-equiv=\"Content-Type\" content=\"application/xml+xhtml; charset=UTF-8\" />\n");
+			if (title)
+				printf("<title>%s</title>\n",title);
 			else
 			{
-				printf(".black     {color: black;}\n");
-				printf(".red       {color: red;}\n");
-				printf(".green     {color: lime;}\n");
-				printf(".yellow    {color: yellow;}\n");
-				printf(".blue      {color: #3333FF;}\n");
-				printf(".purple    {color: fuchsia;}\n");
-				printf(".cyan      {color: aqua;}\n");
-				printf(".white     {color: white;}\n");
-				printf(".bg-black  {background-color: black;}\n");
-				printf(".bg-red    {background-color: red;}\n");
-				printf(".bg-green  {background-color: lime;}\n");
-				printf(".bg-yellow {background-color: yellow;}\n");
-				printf(".bg-blue   {background-color: #3333FF;}\n");
-				printf(".bg-purple {background-color: fuchsia;}\n");
-				printf(".bg-cyan   {background-color: aqua;}\n");
-				printf(".bg-white  {background-color: white;}\n");
+				if (filename==NULL)
+					printf("<title>stdin</title>\n");
+				else
+					printf("<title>%s</title>\n",filename);
 			}
-			printf(".underline {text-decoration: underline;}\n");
-			printf(".bold      {font-weight: bold;}\n");
-			printf(".blink     {text-decoration: blink;}\n");
-			printf("</style>\n");
-		}
-		if (word_wrap)
-		{
-			printf("<style type=\"text/css\">pre {white-space: pre-wrap; white-space: -moz-pre-wrap !important;\n");
-			printf("white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}</style>\n");
-		}
-		printf("</head>\n");
-		if (stylesheet || ! colorshema)
-			printf("<body>\n");
-		else
-		{
-			switch (colorshema)
+			if (stylesheet)
 			{
-				case 1: printf("<body style=\"color:white; background-color:black\">\n"); break;
-				case 2: printf("<body style=\"background-color:pink\">\n");	break;
+				printf("<style type=\"text/css\">\n");
+				switch (colorshema)
+				{
+					case 1:  printf("body       {color: white; background-color: black;}\n");
+									 printf(".reset     {color: white;}\n");
+									 printf(".bg-reset  {background-color: black;}\n");
+									 break;
+					case 2:  printf("body       {background-color: pink;}\n");
+									 printf(".reset     {color: black;}\n");
+									 printf(".bg-reset  {background-color: pink;}\n");
+									 break;
+					default: printf(".reset     {color: black;}\n");
+							 printf(".bg-reset  {background-color: white;}\n");
+				}
+				if (colorshema!=1)
+				{
+					printf(".black     {color: black;}\n");
+					printf(".red       {color: red;}\n");
+					printf(".green     {color: green;}\n");
+					printf(".yellow    {color: olive;}\n");
+					printf(".blue      {color: blue;}\n");
+					printf(".purple    {color: purple;}\n");
+					printf(".cyan      {color: teal;}\n");
+					printf(".white     {color: gray;}\n");
+					printf(".bg-black  {background-color: black;}\n");
+					printf(".bg-red    {background-color: red;}\n");
+					printf(".bg-green  {background-color: green;}\n");
+					printf(".bg-yellow {background-color: olive;}\n");
+					printf(".bg-blue   {background-color: blue;}\n");
+					printf(".bg-purple {background-color: purple;}\n");
+					printf(".bg-cyan   {background-color: teal;}\n");
+					printf(".bg-white  {background-color: gray;}\n");
+				}
+				else
+				{
+					printf(".black     {color: black;}\n");
+					printf(".red       {color: red;}\n");
+					printf(".green     {color: lime;}\n");
+					printf(".yellow    {color: yellow;}\n");
+					printf(".blue      {color: #3333FF;}\n");
+					printf(".purple    {color: fuchsia;}\n");
+					printf(".cyan      {color: aqua;}\n");
+					printf(".white     {color: white;}\n");
+					printf(".bg-black  {background-color: black;}\n");
+					printf(".bg-red    {background-color: red;}\n");
+					printf(".bg-green  {background-color: lime;}\n");
+					printf(".bg-yellow {background-color: yellow;}\n");
+					printf(".bg-blue   {background-color: #3333FF;}\n");
+					printf(".bg-purple {background-color: fuchsia;}\n");
+					printf(".bg-cyan   {background-color: aqua;}\n");
+					printf(".bg-white  {background-color: white;}\n");
+				}
+				printf(".underline {text-decoration: underline;}\n");
+				printf(".bold      {font-weight: bold;}\n");
+				printf(".blink     {text-decoration: blink;}\n");
+				printf("</style>\n");
 			}
+			if (word_wrap)
+			{
+				printf("<style type=\"text/css\">pre {white-space: pre-wrap; white-space: -moz-pre-wrap !important;\n");
+				printf("white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word;}</style>\n");
+			}
+			printf("</head>\n");
+			if (stylesheet || ! colorshema)
+				printf("<body>\n");
+			else
+			{
+				switch (colorshema)
+				{
+					case 1: printf("<body style=\"color:white; background-color:black\">\n"); break;
+					case 2: printf("<body style=\"background-color:pink\">\n");	break;
+				}
+			}
+			
+			//Standardwerte:
+			//printf("<div style=\"font-family:monospace; white-space:pre\">");
+			printf("<pre>\n");
 		}
-		
-		//Standardwerte:
-		//printf("<div style=\"font-family:monospace; white-space:pre\">");
-		printf("<pre>\n");
 	}
 
 	//Begin of Convertion
@@ -482,10 +492,20 @@ int main(int argc,char* args[])
 					printf("</span>");
 				if ((fc!=-1) || (bc!=-1) || (ul!=0) || (bo!=0) || (bl!=0))
 				{
-					if (stylesheet)
-						printf("<span class=\"");
+					if (latex == 0)
+					{
+						if (stylesheet)
+							printf("<span class=\"");
+						else
+							printf("<span style=\"");
+					}
 					else
-						printf("<span style=\"");
+					{
+						if (stylesheet)
+							printf("\\textcolor[HTML]{");
+						else
+							printf("\\textcolor[HTML]{");
+					}
 					switch (fc)
 					{
 						case	0: if (stylesheet)
