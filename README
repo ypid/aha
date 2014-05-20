@@ -8,3 +8,5 @@ To compile just type
 To "install" aha type (as root, or with sudo)
 :make install
 All files are subjects to the LGPL or the MPL. (Dual licensed).
+
+Note: This branch was created to implement LaTeX support, but since it was easier and nicer to extend the project ansi2html https://github.com/ypid/ansi2html/tree/ansi2latex I will probably not continue to implement LaTeX support in aha.
